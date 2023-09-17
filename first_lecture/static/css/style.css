@@ -14,6 +14,18 @@ body {
   max-width: 1600px;
 }
 
+a {
+    text-decoration: none;
+    }
+
+.menu{
+  color: #222;
+  font-size: 32px;
+  font-weight: 700;
+    margin-top: 32px;
+    gap: 32px
+}
+
 .center {
   margin: 0 auto;
 }
