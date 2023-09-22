@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+        <a href="{{ url_for('hello') }}">
+            <button class="btn btn-primary" type="submit">Приветствие</button>
+        </a>
+        <a href="{{ url_for('upload') }}">
+            <button class="btn btn-primary" type="submit">Загрузка изображений</button>
+        </a>
+        <a href="{{ url_for('login') }}">
+            <button class="btn btn-primary" type="submit">Вход в систему</button>
+        </a>
+        <a href="{{ url_for('length') }}">
+            <button class="btn btn-primary" type="submit">Подсчет слов</button>
+        </a>
+       <a href="{{ url_for('calc') }}">
+            <button class="btn btn-primary" type="submit">Калькулятор</button>
+        </a>
+     <a href="{{ url_for('send') }}">
+            <button class="btn btn-primary" type="submit">Проверка возраста</button>
+        </a>
+     <a href="{{ url_for('form') }}">
+            <button class="btn btn-primary" type="submit">Flash сообщение</button>
+        </a>
+</body>
+</html>
