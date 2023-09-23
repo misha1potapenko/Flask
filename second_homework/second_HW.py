@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, make_response, redirect
 
 app = Flask(__name__)
 
+
 # Задание
 #
 # Создать страницу, на которой будет форма для ввода имени и электронной почты,
@@ -17,15 +18,23 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/login/', methods=['GET', 'POST'])
+
+@app.route('/login/', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        name = request.files.get('name')
-        email = request.files.get('email')
-        responce = make_response(redirect('/greet/'))
-        responce.set_cookie('user_name', name)
-        responce.set_cookie('user_email', email)
-    return render_template('index.html')
+    name = request.form['name']
+    email = request.form['email']
+    response = make_response(redirect('/user_hi'))
+    response.set_cookie('user_name', name)
+    response.set_cookie('user_email', email)
+    return response
+
+
+@app.route('/user_hi/')
+def user_hi():
+    user_name = request.cookies.get('user_name')
+    if user_name:
+        return render_template('user_hi.html', name='user_name')
+    return redirect('/')
 
 
 if __name__ == '__main__':

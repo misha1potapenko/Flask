@@ -51,7 +51,7 @@ def login():
         password = request.form.get('password')
         if login == user["login"] and password == user["password"]:
             return f"Привет {login}"
-    return render_template('login.html')
+    return render_template('user_hi.html')
 
 
 # Задание №4
