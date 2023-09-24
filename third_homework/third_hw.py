@@ -5,7 +5,7 @@ import flask_sqlalchemy as SQLAlchemy
 from flask import Flask, request, render_template, make_response, redirect
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydatabase.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy()
 
 
