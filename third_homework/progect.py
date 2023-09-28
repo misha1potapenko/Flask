@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, url_for, flash, make_response, redirect
 from flask_wtf import CSRFProtect
 
@@ -34,6 +35,7 @@ def register():
             email=form.email.data,
             password=form.password.data,
         )
+        user.set_password(user.password)
         db.session.add(user)
         db.session.commit()
         response = make_response(redirect(url_for('home')))
