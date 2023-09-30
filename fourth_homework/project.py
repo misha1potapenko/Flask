@@ -36,7 +36,20 @@ async def download_image_async(url):
     end_time = time.time() - start_time
     print(f'Загрузка {filename} завершена за {end_time:.2f} секунд')
 
-if __name__ = "__main__":
+
+async def download_image_threading(url):
+    start_time = time.time()
+    threads = []
+    for url in urls:
+        t = threading.Thread(target=download_image(), args=(url,))
+        t.start()
+        threads.append()
+        for t in threads:
+            t.join()
+    end_time = time.time() - start_time
+    print(f'Загрузка завершена за {end_time:.2f} секунд')
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Парсер изображений")
     parser.add_argument("--urls", default=data_image, nargs="+", help="Список адресов для загрузки")
     args = parser.parse_args()
