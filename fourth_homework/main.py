@@ -1,14 +1,20 @@
 from pathlib import Path
-import requests, threading, multiprocessing, argparse, os, time, asyncio
+import requests
+import threading
+import multiprocessing
+import argparse
+import os
+import time
+import asyncio
 
 final_async = 0.0
 final_threading = 0.0
 final_multiprocessing = 0.0
 
-data_image = []
+data_images = []
 with open("images.txt", "r") as images:
     for image in images.readlines():
-        data_image.append(image.strip())
+        data_images.append(image.strip())
 
 image_path = Path("./images/")
 
@@ -37,27 +43,53 @@ async def download_image_async(url):
     print(f'Загрузка {filename} завершена за {end_time:.2f} секунд')
 
 
-async def download_image_threading(url):
+def download_image_multiprocessing(urls):
+    start_time = time.time()
+    processes = []
+    for url in urls:
+        t = multiprocessing.Process(target=download_image, args=(url,))
+        t.start()
+        processes.append(t)
+        for t in processes:
+            t.join()
+    end_time = time.time() - start_time
+    print(f'Загрузка завершена за {end_time:.2f} секунд')
+
+
+def download_image_threading(urls):
     start_time = time.time()
     threads = []
     for url in urls:
-        t = threading.Thread(target=download_image(), args=(url,))
+        t = threading.Thread(target=download_image, args=(url,))
         t.start()
-        threads.append()
+        threads.append(t)
         for t in threads:
             t.join()
     end_time = time.time() - start_time
     print(f'Загрузка завершена за {end_time:.2f} секунд')
 
+
+async def download_image_asyncio(url):
+    start_time = time.time()
+    tasks = []
+    for url in urls:
+        task = asyncio.ensure_future(download_image_async(url))
+        tasks.append(task)
+    await asyncio.gather(*tasks)
+    end_time = time.time() - start_time
+    print(f'Загрузка завершена за {end_time:.2f} секунд')
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Парсер изображений")
-    parser.add_argument("--urls", default=data_image, nargs="+", help="Список адресов для загрузки")
+    parser.add_argument("--urls", default=data_images, nargs="+", help="Список адресов для загрузки")
     args = parser.parse_args()
     urls = args.urls
     if not urls:
-        urls = data_image
+        urls = data_images
     print(f'Загрузка {len(urls)} изображений потоки')
-
+    download_image_threading(urls)
     print(f'Загрузка {len(urls)} изображений мультипроцессинг')
-
+    download_image_multiprocessing(urls)
     print(f'Загрузка {len(urls)} изображений асинхронно')
+    asyncio.run(download_image_asyncio(urls))
