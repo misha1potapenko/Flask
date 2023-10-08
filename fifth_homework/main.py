@@ -35,6 +35,7 @@ list_users = [User(user_id=1, name='Pavel'), User(user_id=2, name='Mike')]
 
 @app.get("/users/")
 async def show_users():
+    logger.info(f'Отработал запрос показать всех пользователей')
     return list_users
 
 
@@ -42,6 +43,7 @@ async def show_users():
 async def show_user(user_id: int):
     for user in list_users:
         if user.user_id == user_id:
+            logger.info(f'Отработал запрос - показать пользователя id = {user_id}.')
             return user
     raise HTTPException(status_code=404, detail="User not found")
 
