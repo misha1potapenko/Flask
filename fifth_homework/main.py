@@ -53,16 +53,26 @@ def create_person(attrs: UserIn):
     person = User(user_id=len(list_users)+1, **attrs.dict())
     # добавляем объект в список
     list_users.append(person)
+    logger.info(f'Добавлен новый пользователь')
     return person
 
 
 @app.put("/users/{user_id}")
-async def delete_user(user_id: int):
-    logger.info(f'Отработал DELETE запрос для item id = {user_id}.')
-    return {"user_id": user_id}
+async def update_user(user_id: int, attrs: UserIn):
+    for user in list_users:
+        if user.user_id == user_id:
+            user.name = attrs.name
+            user.description = attrs.description
+            logger.info(f'Отработал запрос на изменение пользователя id = {user_id}.')
+            return user
+    return HTTPException(status_code=404, detail="User not found")
 
 
-@app.delete("/users/{user_id}")
+@app.delete("/users/del/{user_id}")
 async def delete_user(user_id: int):
-    logger.info(f'Отработал DELETE запрос для item id = {user_id}.')
+    for user in list_users:
+        if user.user_id == user_id:
+            list_users.remove(user)
+            logger.info(f'Отработал DELETE запрос для item id = {user_id}.')
+            return list_users
     return {"user_id": user_id}
