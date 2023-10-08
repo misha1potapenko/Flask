@@ -11,7 +11,7 @@
 # Для каждой конечной точки необходимо проводить валидацию данных запроса и ответа.
 # Для этого использовать библиотеку Pydantic.
 import logging
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Body
 from typing import Optional
 from pydantic import BaseModel
 
@@ -43,11 +43,18 @@ async def show_user(user_id: int):
     for user in list_users:
         if user.user_id == user_id:
             return user
-    else:
-        return {"result": "user not found"}
+    raise HTTPException(status_code=404, detail="User not found")
 
 
-@app.get("/users/{user_id}")
+@app.post("/users/add")
+def create_person(attrs: UserIn):
+    person = User(user_id=len(list_users)+1, **attrs.dict())
+    # добавляем объект в список
+    list_users.append(person)
+    return person
+
+
+@app.put("/users/{user_id}")
 async def delete_user(user_id: int):
     logger.info(f'Отработал DELETE запрос для item id = {user_id}.')
     return {"user_id": user_id}
